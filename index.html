@@ -3,14 +3,14 @@
 <html>
 
 <head>
-  <meta charset='utf-8' />
+  <meta charset="utf-8" />
   <title></title>
-  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+  <meta name="viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.0/jquery.min.js"></script>
   <script src="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.js"></script>
   <link href="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.css" rel="stylesheet" />
-  <script src='https://npmcdn.com/csv2geojson@latest/csv2geojson.js'></script>
-  <script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>
+  <script src="https://npmcdn.com/csv2geojson@latest/csv2geojson.js"></script>
+  <script src="https://npmcdn.com/@turf/turf/turf.min.js"></script>
   <style>
     body {
       margin: 0;
@@ -78,7 +78,7 @@
 
 <body>
 
-  <div id='map'></div>
+  <div id="map"></div>
   <script>
 
     var transformRequest = (url, resourceType) => {
@@ -96,18 +96,17 @@
     var map = new mapboxgl.Map({
       container: 'map', // container id
       style: 'mapbox://styles/mapbox/streets-v11', //stylesheet location
-      center: [-131.811464, 68.7852299], // starting position
-      zoom: 8,// starting zoom
+      center: [-131.789203, 68.865352], // starting position
+      zoom: 9,// starting zoom
       transformRequest: transformRequest
     });
 
     $(document).ready(function () {
       $.ajax({
         type: "GET",
-        //YOUR TURN: Replace with csv export link
-        //url: 'https://docs.google.com/spreadsheets/d/1RyMfFvWOgxt5ynMMUpT0SRwMcgKM2RAJgEHQSgb-Chs/edit?usp=sharing', https://docs.google.com/spreadsheets/d/1RyMfFvWOgxt5ynMMUpT0SRwMcgKM2RAJgEHQSgb-Chs/edit?usp=sharing
-		// https://docs.google.com/spreadsheets/d/1MiqwGe_7m6B0xFQfaS3GGRO8CmGm5xlXPICDPEeGHyo/gviz/tq?tqx=out:csv&sheet=Sheet1
-		url: 'https://docs.google.com/spreadsheets/d/1RyMfFvWOgxt5ynMMUpT0SRwMcgKM2RAJgEHQSgb-Chs/gviz/tq?tqx=out:csv&sheet=MalfunctionCollarLastPointVHF', 
+        //YOUR TURN: Replace with csv export link https://docs.google.com/spreadsheets/d/1RyMfFvWOgxt5ynMMUpT0SRwMcgKM2RAJgEHQSgb-Chs/gviz/tq?tqx=out:csv&sheet=MalfunctionCollarLastPointVHF
+        url: 'https://docs.google.com/spreadsheets/d/1Q2c7OXJKlzCJ-MB_Aw8_-ls6lNXyNBl27BLjWnotgsU/gviz/tq?tqx=out:csv&sheet=Sheet1', 
+		//url: 'https://docs.google.com/spreadsheets/d/1Q2c7OXJKlzCJ-MB_Aw8_-ls6lNXyNBl27BLjWnotgsU/', 
         dataType: "text",
         success: function (csvData) { makeGeoJSON(csvData); }
       });
@@ -116,8 +115,8 @@
 
       function makeGeoJSON(csvData) {
         csv2geojson.csv2geojson(csvData, {
-          latfield: 'Latitude',
-          lonfield: 'Longitude',
+          latfield: 'Lat',
+          lonfield: 'Lon',
           delimiter: ','
         }, function (err, data) {
           map.on('load', function () {
@@ -132,7 +131,7 @@
               },
               'paint': {
                 'circle-radius': 5,
-                'circle-color': "purple"
+                'circle-color': "orange"
               }
             });
 
@@ -145,7 +144,8 @@
               //set popup text 
               //You can adjust the values of the popup to match the headers of your CSV. 
               // For example: e.features[0].properties.Name is retrieving information from the field Name in the original CSV. 
-              var description = `<h3>` + e.features[0].properties.Animal_Id + `</h3>` + `<h4>` + `<b>` + `VHF: ` + `</b>` + e.features[0].properties.VHF + `</h4>` + `<h4>` + `<b>` + `Last Date: ` + `</b>` + e.features[0].properties.MAX_TXTDat + `</h4>`;
+              //var description = `<h3>` + e.features[0].properties.Animal_Id + `</h3>` + `<h4>` + `<b>` + `VHF: ` + `</b>` + e.features[0].properties.VHF + `</h4>` + `<h4>` + `<b>` + `Date: ` + `</b>` + e.features[0].properties.SerialDate + `</h4>`;
+			        var description = '<h3>' + e.features[0].properties.Animal_Id + '</h3>' + '<h4>' + '<b>' + 'VHF: ' + '</b>' + e.features[0].properties.VHF + '</h4>' + '<h4>' + '<b>' + 'Last Date: ' + '</b>' + e.features[0].properties.MAX_TXTDat + '</h4>';
 
               // Ensure that if the map is zoomed out such that multiple
               // copies of the feature are visible, the popup appears
@@ -189,3 +189,4 @@
 </body>
 
 </html>
+
